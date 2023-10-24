@@ -16,3 +16,4 @@ class BlogModel(models.Model):
     blog_isactive = models.BooleanField(default=True)
 
 
+    
