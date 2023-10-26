@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework import status
-from blblogapp.models import BlogModel
+from blblogapp.models import Blog
 from blblogapp.serializers import BlogSerializer
 from rest_framework import mixins
 from rest_framework import generics
@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAdminUser
 
 class BlogApiView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
 
-    queryset = BlogModel.objects.all().filter(blog_isactive=True)
+    queryset = Blog.objects.all().filter(blog_isactive=True)
     serializer_class = BlogSerializer
     # permission_classes = [IsAdminUser]
     

@@ -1,5 +1,5 @@
 from rest_framework import serializers, status
-from blblogapp.models import BlogModel
+from blblogapp.models import Blog, Categorie, Tag
 import json
 class BlogSerializer(serializers.ModelSerializer):
     catg_name = serializers.CharField()
@@ -8,30 +8,26 @@ class BlogSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField()
     updated_at = serializers.DateTimeField()
     blog_author = serializers.CharField()
-    catg_tag = serializers.JSONField()
+    catg_tag = serializers.CharField()
     # blog_image = serializers.ImageField()  # Change to ImageField
     # blog_isactive = serializers.BooleanField()
 
 
     class Meta:
-        model = BlogModel
+        model = Blog
         fields = '__all__'
-        # extra_kwargs = {
-        #     'blog_description': {'required': False},
-        #     'created_at': {'required': False},
-        #     'updated_at': {'required': False},
-        #     'blog_author': {'required': False},
-        #     'blog_image': {'required': False},
-        # }
-    # def to_representation(self, instance):
-    #     # Get the original representation
-    #     data = super().to_representation(instance)
-        
-    #     # Parse the catg_tag field as JSON
-    #     catg_tag = json.loads(data['catg_tag'])
-        
-    #     # Return catg_tag in the desired format
-    #     data['catg_tag'] = json.dumps(catg_tag)
-    #     print(data)
-    #     return data
-   
+
+class CategorieSerializer(serializers.ModelSerializer):
+    catg_name = serializers.CharField()
+
+    class Meta:
+        model = Categorie
+        fields = ['id', 'catg_name']
+    
+class TagSerializer(serializers.ModelSerializer):
+    tag_name = serializers.CharField()
+
+    class Meta:
+        model = Tag
+        fields = ['id', 'tag_name']
+    
