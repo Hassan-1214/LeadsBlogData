@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blblogapp.models import Blog, Categorie, Tag
+from blblogapp.models import Blog, Categorie, Tag, Comment
 # Register your models here.
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
@@ -7,9 +7,9 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields = ('catg_name', 'blog_title', 'blog_author')
     ordering = ['blog_title']
 
-    # def get_tag_names(self, obj):
-    #     return ", ".join([tag.tag_name for tag in obj.catg_tags.all()])
-    # get_tag_names.short_description = 'Tags'
+    def get_tag_names(self, obj):
+        return ", ".join([tag.tag_name for tag in obj.catg_tags.all()])
+    get_tag_names.short_description = 'Tags'
 
 
 @admin.register(Tag)
@@ -24,3 +24,9 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('catg_name',)
     ordering = ['id']
 
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'message')
+    search_fields = ('name', 'email', 'subject', 'message')
+    ordering = ['name']

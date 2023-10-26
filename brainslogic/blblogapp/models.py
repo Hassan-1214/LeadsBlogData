@@ -12,6 +12,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.tag_name
+class Comment(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+
 
 class Blog(models.Model):
     blog_title = models.CharField(max_length=200)
@@ -21,7 +27,7 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     blog_author = models.CharField(max_length=100, blank=True, null=True)
     author_image = models.ImageField(blank=True, null=True, upload_to="media/")
-    catg_tag = models.ManyToManyField(Tag)
+    tag_name = models.ManyToManyField(Tag)
     catg_views = models.IntegerField(default=0)
     blog_image = models.ImageField(blank=True, null=True, help_text='Image size: Width=1301 pixel. Height=556 pixel', upload_to="media/")
     blog_isactive = models.BooleanField(default=True)
