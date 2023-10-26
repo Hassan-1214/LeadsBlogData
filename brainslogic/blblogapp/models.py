@@ -21,7 +21,7 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     blog_author = models.CharField(max_length=100, blank=True, null=True)
     author_image = models.ImageField(blank=True, null=True, upload_to="media/")
-    catg_tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    catg_tag = models.ManyToManyField(Tag)
     catg_views = models.IntegerField(default=0)
     blog_image = models.ImageField(blank=True, null=True, help_text='Image size: Width=1301 pixel. Height=556 pixel', upload_to="media/")
     blog_isactive = models.BooleanField(default=True)
