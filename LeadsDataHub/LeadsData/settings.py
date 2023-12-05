@@ -47,15 +47,15 @@ INSTALLED_APPS = [
     'LDHapp',
     'rest_framework',
     'corsheaders',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -153,3 +153,12 @@ EMAIL_HOST_USER = 'contact@leadsdatahub.com'  # Update this with your IONOS emai
 EMAIL_HOST_PASSWORD = 'g&rhNw$a6E$2G#4'  # Update this with your IONOS email password
 EMAIL_USE_TLS = True  # Set this to True if your SMTP server requires TLS
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Set the default "from" email address
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'  # specify the path where uploaded images will be stored
+CKEDITOR_JQUERY_URL = 'https://cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js'  # specify the jQuery version
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': 800,  # specify the editor width
+        'height': 300,  # specify the editor height
+    },
+}

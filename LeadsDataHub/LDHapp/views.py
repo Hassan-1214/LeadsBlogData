@@ -28,7 +28,13 @@ class BlogApiView(ListAPIView):
     pagination_class = myPageNumberPagination
 
     def get_queryset(self,):
-        return Blog.objects.filter(blog_isactive=True)
+         # Get the most recent blog
+        recent_blog = Blog.objects.filter(blog_isactive=True).order_by('-created_at').first()
+
+        # Get all active blogs excluding the most recent one
+        queryset = Blog.objects.filter(blog_isactive=True).exclude(pk=recent_blog.pk).order_by('-created_at')
+
+        return queryset
     
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -38,7 +44,39 @@ class BlogApiView(ListAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-           
+    
+class RecentBlogDetailView(APIView):
+    def get(self, request, format=None):
+        # Get the most recent blog
+        recent_blog = Blog.objects.filter(blog_isactive=True).order_by('-created_at').first()
+
+        if recent_blog:
+            all_blogs = Blog.objects.filter(blog_isactive=True).exclude(pk=recent_blog.pk).order_by('-created_at')
+
+            # Paginate the remaining blogs
+            paginator = myPageNumberPagination()
+            paginated_blogs = paginator.paginate_queryset(all_blogs, request)
+
+            serializer = BlogSerializer(recent_blog, context={'request': request})
+
+            # Calculate the time difference
+            now = timezone.now()
+            time_difference = now - recent_blog.created_at
+            minutes_ago = time_difference.total_seconds() / 60
+            hours_ago = minutes_ago / 60
+            days_ago = hours_ago / 24
+
+            # Add time difference to the response
+            response_data = serializer.data
+            response_data['time_difference'] = {
+                'minutes': int(minutes_ago),
+                'hours': int(hours_ago),
+                'days': int(days_ago),
+            }
+
+            return Response(response_data)
+        else:
+            return Response({'message': 'No active blogs available'}, status=status.HTTP_404_NOT_FOUND)
 class BlogDetailsAPIView(APIView):
     def get(self, request, blog_id):
         try:

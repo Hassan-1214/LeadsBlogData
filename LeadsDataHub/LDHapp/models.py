@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 class Categorie(models.Model):
@@ -44,8 +45,8 @@ class Leadsform(models.Model):
 class Blog(models.Model):
     blog_title = models.CharField(max_length=200)
     catg_name = models.ForeignKey(Categorie, on_delete=models.CASCADE)
-    blog_description = models.TextField(blank=True, null=True)
-    short_description = models.TextField(blank=True, null=True)
+    blog_description = RichTextField()
+    short_description = RichTextField()
     main_heading = models.CharField(max_length=100,blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
