@@ -17,6 +17,7 @@ from django.conf import settings
 from rest_framework.exceptions import ValidationError
 from LeadsData.settings import EMAIL_HOST_USER
 from rest_framework.response import Response
+from django.db.models import Q
 
 
 
@@ -44,6 +45,40 @@ class BlogApiView(ListAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class BlogSearchView(ListAPIView):
+    serializer_class = BlogSerializer
+    pagination_class = myPageNumberPagination
+
+    def get_queryset(self):
+        keyword = self.request.query_params.get('keyword', '').lower()
+
+        print(keyword)
+
+        # Perform a search in relevant fields using Q objects
+        queryset = Blog.objects.filter(
+            Q(blog_title__icontains=keyword) |
+            Q(catg_name__catg_name__icontains=keyword) |
+            Q(blog_description__icontains=keyword) |
+            Q(short_description__icontains=keyword) |
+            Q(main_heading__icontains=keyword) |
+            Q(blog_author__icontains=keyword) |
+            Q(tag_name__tag_name__icontains=keyword)
+        ).distinct().order_by('-created_at')
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response({'data': serializer.data})
+
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse({'results': serializer.data})
+    
     
 class RecentBlogDetailView(APIView):
     def get(self, request, format=None):
